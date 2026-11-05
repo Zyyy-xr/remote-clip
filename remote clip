@@ -1,1 +1,38 @@
-https://docs.vllm.ai/projects/vllm-ascend-cn/zh-cn/latest/user_guide/feature_guide/kv_cache_pool_ascend_store.html
+DCP 对 Mooncake KV Cache 池化有什么影响？
+这一部分建议你重点记住。
+
+普通 TP 场景下，KV Cache 可能按照 Head 维度分布。
+
+DCP 开启后，KV Cache 进一步按照序列维度分布。
+
+因此，池化系统必须处理两个维度：
+\[
+KVCache = f(TP\ Rank,\ DCP\ Rank,\ Sequence)
+\]
+
+举个例子：
+Prefill：
+TP = 8
+DCP = 2
+
+Decode：
+TP = 8
+DCP = 2
+
+
+那么池化系统不能只知道：
+KV Cache 属于 TP Rank 0
+
+
+还需要知道：
+KV Cache 属于哪个 TP Rank
+KV Cache 属于哪个 DCP Rank
+KV Cache 对应哪个 Token 区间
+
+
+否则就可能出现：
+- KV Cache 分片错位。
+- 数据写入和读取不匹配。
+- Decode 无法正确恢复完整上下文。
+- 数据传输过程中需要额外重排。
+尤其是 vLLM Ascend，目前文档明确提出，在 KV Cache 传输场景（例如 KV 池化、P/D 分离）中，需要将 cp_kv_cache_interleave_size 设置为 KV Cache 的 block_size，默认值为 128。
