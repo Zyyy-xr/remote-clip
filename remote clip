@@ -36,3 +36,5 @@ KV Cache 对应哪个 Token 区间
 - Decode 无法正确恢复完整上下文。
 - 数据传输过程中需要额外重排。
 尤其是 vLLM Ascend，目前文档明确提出，在 KV Cache 传输场景（例如 KV 池化、P/D 分离）中，需要将 cp_kv_cache_interleave_size 设置为 KV Cache 的 block_size，默认值为 128。
+
+https://hidevlab.huawei.com/login?redirect=https://hidevlab.huawei.com/home
