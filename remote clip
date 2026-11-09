@@ -38,3 +38,31 @@ KV Cache 对应哪个 Token 区间
 尤其是 vLLM Ascend，目前文档明确提出，在 KV Cache 传输场景（例如 KV 池化、P/D 分离）中，需要将 cp_kv_cache_interleave_size 设置为 KV Cache 的 block_size，默认值为 128。
 
 https://hidevlab.huawei.com/login?redirect=https://hidevlab.huawei.com/home
+
+
+
+【需求价值】：池化是Agent长序列下基础特性
+
+【应用场景】：Agent推理
+
+【需求描述】：
+1、池化能力泛化&增强，HBM-DRAM-SSD三级缓存及layerwised；
+2、支持Dskv4.1 swa replay；
+3、mooncake和memcache后端均支持以上功能；
+
+【序列长度】
+输入128k，输出1k
+【硬件】
+A3、A5
+
+【验证标准】
+支持模型：GLM5.3-Flash
+功能支持：
+1. 池化三级缓存及Layerwise D2D支持泛化，功能支持;
+2. 支持多后端，mooncake和Memcache；
+3. 支持Dskv4.1 swa replay；
+
+性能支持：
+多前缀Dram相比单前缀纯HBM命中，性能劣化小于5%；
+单前缀Dram相比单前缀HBM命中，性能劣化小于5%；
+SSD 20%命中下，开关prefixcache 性能提升4x
