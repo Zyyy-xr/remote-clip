@@ -66,3 +66,6 @@ A3、A5
 多前缀Dram相比单前缀纯HBM命中，性能劣化小于5%；
 单前缀Dram相比单前缀HBM命中，性能劣化小于5%；
 SSD 20%命中下，开关prefixcache 性能提升4x
+
+
+https://github.com/vllm-project/vllm-ascend/pull/21314这是我让agent改的pr，主要是把mooncake的block_key逻辑和memcache的gva逻辑抽出来，后面有机器一起验证下
